@@ -19,6 +19,11 @@
   font-family: sans-serif;
 }
 
+.navbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
 /* Inner content container */
 .nav-container {
   height: 60px;

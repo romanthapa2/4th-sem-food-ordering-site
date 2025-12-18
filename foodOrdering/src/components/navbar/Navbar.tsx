@@ -1,9 +1,13 @@
 import { useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
+import { Login } from "../authentication/Login";
+import { Singup } from "../authentication/Singup";
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   return (
     <>
@@ -42,11 +46,18 @@ export const Navbar = () => {
 
           <ul className="nav-right">
             <li>Wishlist</li>
-            <li>Sign In</li>
+            <li onClick={() => setIsLoginOpen(true)}>Sign In</li>
             <li>Your Cart</li>
           </ul>
         </div>
       </nav>
+
+      <Login
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onOpenSignup={() => setIsSignupOpen(true)}
+      />
+      <Singup isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
     </>
   );
 };
