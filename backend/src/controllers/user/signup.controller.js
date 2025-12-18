@@ -1,7 +1,8 @@
-import { createUser, findUserByEmail } from '../model/user.model.js';
-import { isValidEmail } from '../utils/validateEmail.js';
-import { sendResponse, sendError } from '../utils/response.js';
-import { parseRequestBody } from '../utils/requestParser.js';
+import { createUser } from '../../model/user.model.js';
+import { isValidEmail } from '../../utils/validateEmail.js';
+import { sendResponse, sendError } from '../../utils/response.js';
+import { parseRequestBody } from '../../utils/requestParser.js';
+import { findUserByEmail } from '../../utils/findUserbyEmail.js';
 
 /**
  * User Controller - Business logic for user operations

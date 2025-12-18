@@ -1,9 +1,10 @@
 
-import { verifyPassword } from '../utils/password.js';
-import { sendResponse, sendError } from '../utils/response.js';
-import { parseRequestBody } from '../utils/requestParser.js';
-import { findUserByEmail } from '../model/user.model.js';
-import { isValidEmail } from '../utils/validateEmail.js';
+import { verifyPassword } from '../../utils/password.js';
+import { sendResponse, sendError } from '../../utils/response.js';
+import { parseRequestBody } from '../../utils/requestParser.js';
+import { findUserByEmail } from '../../utils/findUserbyEmail.js';
+import { isValidEmail } from '../../utils/validateEmail.js';
+
 
 
 /**

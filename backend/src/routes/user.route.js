@@ -1,5 +1,5 @@
-import { signup } from '../controllers/signup.controller.js';
-import { login } from '../controllers/login.controller.js';
+import { signup } from '../controllers/user/signup.controller.js';
+import { login } from '../controllers/user/login.controller.js';
 
 /**
  * User Routes - Handle user-related routes
