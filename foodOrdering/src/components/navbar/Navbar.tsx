@@ -1,23 +1,33 @@
+// Navbar.tsx
 import { useState } from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Login } from "../authentication/Login";
 import { Singup } from "../authentication/Singup";
+import useCategory from "../../zustard/useProduct";
 
 export const Navbar = () => {
+  const {updateCategory} = useCategory();
   const [open, setOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (newCategory:string) => {
+    setOpen(false); // Close dropdown
+    navigate(`/products`);
+    updateCategory(newCategory);
+  };
 
   return (
     <>
-      <div id="traditionally">Tradinally HomeMade</div>
+      <div id="traditionally">Traditionally HomeMade</div>
 
       <nav className="navbar">
         <div className="nav-container">
           <ul className="nav-left">
             <li>
-              <Link to="/">Food Ordering App</Link>
+              <a onClick={() => navigate("/")}>Food Ordering App</a>
             </li>
 
             {/* SHOP ALL DROPDOWN */}
@@ -25,27 +35,26 @@ export const Navbar = () => {
               Shop All
               {open && (
                 <ul className="dropdown">
-                  <li>
-                    <Link to="/momo">Momo</Link>
+                  <li onClick={() => handleCategoryClick('Momo')}>
+                    Momo
                   </li>
-                  <li>
-                    <Link to="/khaja">Khaja</Link>
+                  <li onClick={() => handleCategoryClick('Khaja')}>
+                    Khaja
                   </li>
-                  <li>
-                    <Link to="/pasta">Pasta</Link>
+                  <li onClick={() => handleCategoryClick('Pasta')}>
+                    Pasta
                   </li>
                 </ul>
               )}
             </li>
 
             <li>
-              <Link to="/about-us">About Us</Link>
+              <a onClick={() => navigate("/about-us")}>About Us</a>
             </li>
             <li>Contact Us</li>
           </ul>
 
           <ul className="nav-right">
-            <li>Wishlist</li>
             <li onClick={() => setIsLoginOpen(true)}>Sign In</li>
             <li>Your Cart</li>
           </ul>

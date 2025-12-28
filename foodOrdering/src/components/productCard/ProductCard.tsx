@@ -1,58 +1,40 @@
 import React from "react";
-import "./ProductCard.css";
+import type { Product } from "../../types/product.types";
+import "../products/Product.css";
 
-export interface ProductCardProps {
-  id: string | number;
-  imageUrl: string;
-  title: string;
-  price: number;
-  rating?: number;     // optional rating (0–5)
-  onAddToCart: (id: string | number) => void;
+interface ProductCardProps {
+  product: Product;
+  onAddToCart?: (productId: number) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  id,
-  imageUrl,
-  title,
-  price,
-  rating = 0,
-  onAddToCart,
-}) => {
-  const renderStars = () => {
-    const fullStars = Math.floor(rating);
-    const hasHalf = rating - fullStars >= 0.5;
-    return (
-      <>
-        {Array.from({ length: fullStars }, (_, i) => (
-          <span key={`full-${i}`} className="star full">★</span>
-        ))}
-        {hasHalf && <span className="star half">★</span>}
-        {Array.from({ length: 5 - Math.ceil(rating) }, (_, i) => (
-          <span key={`empty-${i}`} className="star empty">☆</span>
-        ))}
-      </>
-    );
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+  const handleAddToCart = () => {
+    if (onAddToCart) {
+      onAddToCart(product.id);
+    }
   };
 
   return (
     <div className="product-card">
-      <div className="image-wrapper">
-        <img src={imageUrl} alt={title} className="product-image" />
-      </div>
-
-      <div className="product-info">
-        <h4 className="product-title">{title}</h4>
-        <div className="rating">{renderStars()}</div>
-        <p className="product-price">Rs. {price.toFixed(2)}</p>
-        <button
-          className="add-cart-btn"
-          onClick={() => onAddToCart(id)}
-        >
+      <div className="product-image-wrapper">
+        <img
+          src={product.image || "https://via.placeholder.com/300"}
+          alt={product.name}
+          className="product-image"
+        />
+        <button className="add-to-cart-btn" onClick={handleAddToCart}>
           Add To Cart
         </button>
+      </div>
+      <div className="product-info">
+        <div className="product-rating">
+          <span className="star-icon">★</span>
+          <span className="rating-value">{(product.rating || 0).toFixed(1)}</span>
+          <span className="review-count">({product.reviews || 0})</span>
+        </div>
+        <h3 className="product-name">{product.name}</h3>
+        <p className="product-price">Rs {product.price}</p>
       </div>
     </div>
   );
 };
-
-export default ProductCard;
