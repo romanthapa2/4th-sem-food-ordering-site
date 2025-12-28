@@ -43,15 +43,29 @@ export async function createProduct(productData) {
  * @returns {Promise<Array>} - List of products in the given category
  */
 export async function getProductsByCategory(category) {
-  const query = `
-    SELECT id, name, description, price, category, created_at
-    FROM products
-    WHERE category = ?
-    ORDER BY created_at DESC
-  `;
+  let query;
+  let params = [];
+
+  if (category) {
+    // If category is provided, filter by category
+    query = `
+      SELECT id, name, description, price, category, created_at
+      FROM products
+      WHERE category = ?
+      ORDER BY created_at DESC
+    `;
+    params = [category];
+  } else {
+    // If no category, return all products
+    query = `
+      SELECT id, name, description, price, category, created_at
+      FROM products
+      ORDER BY created_at DESC
+    `;
+  }
 
   try {
-    const [products] = await db.execute(query, [category]);
+    const [products] = await db.execute(query, params);
     return products;
   } catch (error) {
     throw error;

@@ -68,14 +68,12 @@ export async function getProductsByCategoryController(req, res) {
     const url = new URL(req.url, `http://${req.headers.host}`);
     const category = url.searchParams.get('category');
 
-    if (!category || !category.trim()) {
-      return sendError(res, 400, 'Category is required');
-    }
+     const trimmedCategory = category ? category.trim() : null;
 
-    const products = await getProductsByCategory(category.trim());
+    const products = await getProductsByCategory(trimmedCategory);
 
     sendResponse(res, 200, {
-      category: category.trim(),
+      category: trimmedCategory || 'All',
       count: products.length,
       products,
     });
