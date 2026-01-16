@@ -13,7 +13,6 @@ export async function findUserByEmail(email) {
       email,
       password_hash,
       role,
-      is_active,
       created_at
     FROM users
     WHERE email = ?

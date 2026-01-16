@@ -7,9 +7,9 @@ export const Footer = () => {
 
         {/* Brand Section */}
         <div className="footer-col">
-          <h2 className="footer-logo">Aama Ko Achar</h2>
+          <h2 className="footer-logo">dai ko pasal</h2>
           <p className="footer-desc">
-            Traditionally homemade Nepali pickles delivered fresh and tasty.
+            Traditionally homemade Nepali Foods delivered fresh and tasty.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export const Footer = () => {
         {/* Contact / Social */}
         <div className="footer-col">
           <h3>Contact</h3>
-          <p>Email: support@aamakoachar.com</p>
+          <p>Email: support@foodhub.com</p>
           <p>Phone: +977 9812345678</p>
 
           <div className="footer-socials">
@@ -51,7 +51,7 @@ export const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        © {new Date().getFullYear()} Aama Ko Achar · All Rights Reserved
+        © {new Date().getFullYear()} dai ko pasal · All Rights Reserved
       </div>
     </footer>
   );

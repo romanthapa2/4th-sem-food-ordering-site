@@ -1,5 +1,4 @@
 
-import { useSearchParams } from "react-router-dom";
 import { ProductSidebar } from "../productSidebar/ProductSidebar";
 import { SortBar } from "../sortbar/sortbar";
 import { ProductGrid } from "../productGrid/productGrid";
