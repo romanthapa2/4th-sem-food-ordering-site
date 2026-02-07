@@ -8,11 +8,13 @@ import { useProducts } from "../../hooks/useProducts";
 import "./Product.css";
 import useCategory from "../../zustard/useProduct";
 import type { SortBy } from "../../zustard/useProduct";
+import { useCart } from "../../zustard/useCart";
 
 const CATEGORIES = ["Achar", "Masala", "Sekeko", "Pickel", "Momo", "Khaja", "Pasta"];
 
 export const Products = () => {
   const {updateCategory,updatePriceFrom,updatePriceTo,updateSortBy,sortBy,category} = useCategory();
+  const { addToCart } = useCart();
   // const [searchParams] = useSearchParams();
   // const categoryFromUrl = searchParams.get("category");
 
@@ -43,8 +45,10 @@ export const Products = () => {
   };
 
   const handleAddToCart = (productId: number) => {
-    console.log("Add to cart:", productId);
-    // Implement cart logic here
+    const product = allProducts.find((p) => p.id === productId);
+    if (product) {
+      addToCart(product);
+    }
   };
 
   const handlePageChange = (page: number) => {

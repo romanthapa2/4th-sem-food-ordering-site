@@ -56,7 +56,7 @@ export const Navbar = () => {
 
           <ul className="nav-right">
             <li onClick={() => setIsLoginOpen(true)}>Sign In</li>
-            <li>Your Cart</li>
+            <li onClick={() => navigate("/cart")}>Your Cart</li>
           </ul>
         </div>
       </nav>

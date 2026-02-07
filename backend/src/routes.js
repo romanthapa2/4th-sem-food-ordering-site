@@ -1,5 +1,6 @@
 import { handleUserRoutes } from './routes/user.route.js';
 import { handleProductRoutes } from './routes/product.route.js';
+import { handleCheckoutRoutes } from './routes/checkout.route.js';
 
 export function handleRoutes(req, res) {
   const { method, url } = req;
@@ -26,6 +27,12 @@ export function handleRoutes(req, res) {
   // Product routes
   const productRouteHandled = handleProductRoutes(req, res);
   if (productRouteHandled) {
+    return;
+  }
+
+  // Checkout routes
+  const checkoutRouteHandled = handleCheckoutRoutes(req, res);
+  if (checkoutRouteHandled) {
     return;
   }
 

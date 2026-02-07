@@ -1,0 +1,36 @@
+-- Orders table schema for food delivery system
+-- Run this SQL to create the orders and order_items tables if they don't exist
+
+-- CREATE TABLE IF NOT EXISTS orders (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   full_name VARCHAR(255) NOT NULL,
+--   email VARCHAR(255) NOT NULL,
+--   phone VARCHAR(20) NOT NULL,
+--   address VARCHAR(500) NOT NULL,
+--   city VARCHAR(100) NOT NULL,
+--   payment_method ENUM('cash', 'card', 'online') DEFAULT 'cash',
+--   delivery_instructions TEXT NULL,
+--   total_amount DECIMAL(10, 2) NOT NULL,
+--   status ENUM('pending', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled') DEFAULT 'pending',
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--   INDEX idx_email (email),
+--   INDEX idx_status (status),
+--   INDEX idx_created_at (created_at)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- CREATE TABLE IF NOT EXISTS order_items (
+--   id INT AUTO_INCREMENT PRIMARY KEY,
+--   order_id INT NOT NULL,
+--   product_id INT NOT NULL,
+--   product_name VARCHAR(255) NOT NULL,
+--   quantity INT NOT NULL,
+--   price DECIMAL(10, 2) NOT NULL,
+--   subtotal DECIMAL(10, 2) NOT NULL,
+--   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+--   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL,
+--   INDEX idx_order_id (order_id),
+--   INDEX idx_product_id (product_id)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
