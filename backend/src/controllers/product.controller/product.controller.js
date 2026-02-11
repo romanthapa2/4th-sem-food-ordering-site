@@ -1,6 +1,9 @@
 import { createProduct, getProductsByCategory, updateProduct, deleteProduct } from '../../model/product.model.js';
 import { sendResponse, sendError } from '../../utils/response.js';
 import { parseRequestBody } from '../../utils/requestParser.js';
+import Busboy from 'busboy';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Product Controller - Business logic for product operations
@@ -13,7 +16,98 @@ import { parseRequestBody } from '../../utils/requestParser.js';
  */
 export async function createProductController(req, res) {
   try {
-    // Parse request body
+    const rawContentType = req.headers['content-type'] || '';
+
+    // If request is multipart/form-data, use Busboy to handle file upload + fields
+    if (rawContentType.includes('multipart/form-data')) {
+      const busboy = Busboy({ headers: req.headers });
+
+      const fields = {};
+      let imagePath = null;
+
+      const uploadDir = path.join(process.cwd(), 'uploads');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      busboy.on('field', (fieldname, value) => {
+        fields[fieldname] = value;
+      });
+
+      busboy.on('file', (fieldname, file, info) => {
+        const { filename } = info;
+
+        if (!filename) {
+          // No file actually uploaded for this field
+          file.resume();
+          return;
+        }
+
+        const ext = path.extname(filename) || '';
+        const safeName = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
+        const saveTo = path.join(uploadDir, safeName);
+
+        imagePath = `/uploads/${safeName}`;
+
+        const writeStream = fs.createWriteStream(saveTo);
+        file.pipe(writeStream);
+
+        writeStream.on('error', (err) => {
+          console.error('Error writing uploaded file:', err);
+          file.resume();
+        });
+      });
+
+      busboy.on('error', (err) => {
+        console.error('Busboy error while parsing multipart request:', err);
+        sendError(res, 400, 'Invalid multipart/form-data request');
+      });
+
+      busboy.on('finish', async () => {
+        try {
+          const { name, slug, description, price } = fields;
+
+          // Basic validation
+          if (!name || typeof name !== 'string' || !price) {
+            return sendError(res, 400, 'Name and price are required');
+          }
+
+          if (name.trim().length < 2) {
+            return sendError(res, 400, 'Product name must be at least 2 characters long');
+          }
+
+          const numericPrice = Number(price);
+          if (Number.isNaN(numericPrice) || numericPrice <= 0) {
+            return sendError(res, 400, 'Price must be a positive number');
+          }
+
+          const productData = {
+            name: name.trim(),
+            slug: slug ? slug.trim() : null,
+            description: typeof description === 'string' ? description.trim() : null,
+            price: numericPrice,
+            image_url: imagePath,
+          };
+
+          const newProduct = await createProduct(productData);
+
+          // Success response, also include image path if uploaded
+          sendResponse(res, 201, {
+            message: 'Product created successfully',
+            product: newProduct,
+            imagePath,
+          });
+        } catch (error) {
+          console.error('Create product (multipart) error:', error);
+          sendError(res, 500, 'Internal server error');
+        }
+      });
+
+      req.pipe(busboy);
+      return;
+    }
+
+    // Fallback: JSON / x-www-form-urlencoded body (no file upload)
     const body = await parseRequestBody(req);
     const { name,slug, description, price } = body;
 

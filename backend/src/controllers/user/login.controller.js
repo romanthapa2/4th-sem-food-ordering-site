@@ -33,6 +33,7 @@ export async function login(req, res) {
   
       // Verify password
       const isValidPassword = await verifyPassword(password, user.password_hash);
+      console.log("Login - password valid:", isValidPassword);
       if (!isValidPassword) {
         return sendError(res, 401, 'Invalid email or password');
       }

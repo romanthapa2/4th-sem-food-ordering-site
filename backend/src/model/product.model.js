@@ -8,26 +8,28 @@ import { db } from '../db.js';
  * Create a new product in the database
  * @param {Object} productData - Product data object
  * @param {string} productData.name - Product name
+ * @param {string} [productData.slug] - Product slug (optional)
  * @param {string} [productData.description] - Product description (optional)
  * @param {number} productData.price - Product price
+ * @param {string} [productData.image_url] - Image URL/path (optional)
  * @returns {Promise<Object>} - Created product object
  */
 export async function createProduct(productData) {
-  const { name,slug, description = null, price } = productData;
+  const { name, slug, description = null, price, image_url = null } = productData;
 
   const query = `
-    INSERT INTO products (name,slug, description, price, created_at)
-    VALUES (?, ?, ?, ?, NOW())
+    INSERT INTO products (name, slug, description, price, image_url, created_at)
+    VALUES (?, ?, ?, ?, ?, NOW())
   `;
 
-  const values = [name,slug, description, price];
+  const values = [name, slug, description, price, image_url];
 
   try {
     const [result] = await db.execute(query, values);
 
-    // Fetch the created product
+    // Fetch the created product (including image_url)
     const [products] = await db.execute(
-      'SELECT id, name,slug, description, price, created_at FROM products WHERE id = ?',
+      'SELECT id, name, slug, description, price, image_url, created_at FROM products WHERE id = ?',
       [result.insertId]
     );
 
@@ -49,7 +51,7 @@ export async function getProductsByCategory(category) {
   if (category) {
     // If category is provided, filter by category
     query = `
-      SELECT id, name, description, price, category, created_at
+      SELECT id, name, description, price, category, image_url, created_at
       FROM products
       WHERE category = ?
       ORDER BY created_at DESC
@@ -58,7 +60,7 @@ export async function getProductsByCategory(category) {
   } else {
     // If no category, return all products
     query = `
-      SELECT id, name, description, price, category, created_at
+      SELECT id, name, description, price, category, image_url, created_at
       FROM products
       ORDER BY created_at DESC
     `;
@@ -103,6 +105,11 @@ export async function updateProduct(id, updates) {
     values.push(updates.price);
   }
 
+  if (typeof updates.image_url === 'string' || updates.image_url === null) {
+    fields.push('image_url = ?');
+    values.push(updates.image_url);
+  }
+
   if (fields.length === 0) {
     // Nothing to update
     return null;
@@ -124,7 +131,7 @@ export async function updateProduct(id, updates) {
     }
 
     const [products] = await db.execute(
-      'SELECT id, name, slug, description, price, created_at, updated_at FROM products WHERE id = ?',
+      'SELECT id, name, slug, description, price, image_url, created_at, updated_at FROM products WHERE id = ?',
       [id]
     );
 

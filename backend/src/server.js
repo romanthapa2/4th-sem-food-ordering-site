@@ -3,13 +3,17 @@ import "dotenv/config";
 import { handleRoutes } from "./routes.js";
 
 const PORT = 3000;
-const ALLOWED_ORIGIN = "http://localhost:5173";
+const ALLOWED_ORIGIN = ["http://localhost:5173", "http://localhost:5174"];
 
 /**
  * Set common CORS headers on every response
  */
-function setCorsHeaders(res) {
-  res.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+function setCorsHeaders(req,res) {
+  const origin = req.headers.origin;
+    if (ALLOWED_ORIGIN.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET,POST,PUT,PATCH,DELETE,OPTIONS"
@@ -24,7 +28,7 @@ function setCorsHeaders(res) {
 
 const server = http.createServer((req, res) => {
   // Always attach CORS headers
-  setCorsHeaders(res);
+  setCorsHeaders(req,res);
 
   // Handle CORS preflight requests early
   if (req.method === "OPTIONS") {

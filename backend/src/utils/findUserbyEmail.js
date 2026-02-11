@@ -21,6 +21,8 @@ export async function findUserByEmail(email) {
 
   const [rows] = await db.execute(sql, [email]);
 
+  console.log("findUserByEmail - email:", email, "result:", rows);
+
   if (rows.length === 0) {
     return null;
   }
